@@ -3,6 +3,24 @@ const { Receipt, Item } = require("../db/index.js");
 
 const router = express.Router();
 
+router.get("/:id/points", async (req, res) => {
+  const { id } = req.params;
+  console.log("receiptId", id);
+
+  try {
+    const receipt = await Receipt.scope("points").findByPk(id);
+    if (!receipt) {
+      return res.status(404).json({ error: "Receipt not found." });
+    }
+
+    const points = await receipt.getPoints();
+
+    return res.status(200).json({ points });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 router.post("/", async (req, res) => {
   const { retailer, purchaseDate, purchaseTime, total, items } = req.body;
 
@@ -33,7 +51,7 @@ router.get("/", async (req, res) => {
         {
           model: Item,
           attributes: {
-            exclude: ["createdAt", "updatedAt", "receiptId"],
+            exclude: ["createdAt", "updatedAt"],
           },
         },
       ],

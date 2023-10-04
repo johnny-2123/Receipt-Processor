@@ -1,7 +1,6 @@
 const { Model, DataTypes, UUIDV4 } = require("sequelize");
-const { Item } = require("../index.js");
 
-module.exports = (sequelize) => {
+module.exports = (sequelize, models) => {
   class Receipt extends Model {
     static associate(models) {
       Receipt.hasMany(models.Item, {
@@ -10,17 +9,15 @@ module.exports = (sequelize) => {
       });
     }
 
-    static async getPoints() {
-      const { id } = this;
-      const items = await Item.findAll({
-        where: { receiptId: id },
-      });
+    _getRetailerNamePoints() {
+      const { retailer } = this;
+      const trimmedRetailerName = retailer.replace(/[^a-zA-Z0-9]/g, "");
+      return trimmedRetailerName.length;
+    }
 
-      const total = items.reduce((acc, item) => {
-        return acc + items.price;
-      }, 0);
-
-      return { points: total };
+    async getPoints() {
+      const retailerNamePoints = this._getRetailerNamePoints();
+      return retailerNamePoints;
     }
   }
 
@@ -57,6 +54,13 @@ module.exports = (sequelize) => {
             "createdAt",
             "updatedAt",
           ],
+        },
+      },
+      scopes: {
+        points: {
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
         },
       },
     }
