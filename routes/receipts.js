@@ -5,7 +5,6 @@ const router = express.Router();
 
 router.get("/:id/points", async (req, res) => {
   const { id } = req.params;
-  console.log("receiptId", id);
 
   try {
     const receipt = await Receipt.scope("points").findByPk(id);

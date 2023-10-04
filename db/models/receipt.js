@@ -49,8 +49,7 @@ module.exports = (sequelize, models) => {
     _getPurchaseDatePoints() {
       const { purchaseDate } = this;
       const date = new Date(purchaseDate);
-      const day = date.getDay();
-
+      const day = date.getUTCDate();
       return day % 2 !== 0 ? 6 : 0;
     }
 
