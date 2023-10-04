@@ -12,6 +12,7 @@ module.exports = (sequelize, models) => {
     _getRetailerNamePoints() {
       const { retailer } = this;
       const trimmedRetailerName = retailer.replace(/[^a-zA-Z0-9]/g, "");
+
       return trimmedRetailerName.length;
     }
 
@@ -49,14 +50,17 @@ module.exports = (sequelize, models) => {
       const { purchaseDate } = this;
       const date = new Date(purchaseDate);
       const day = date.getDay();
+
       return day % 2 !== 0 ? 6 : 0;
     }
 
     _getPurchaseTimePoints() {
-      const { purchaseTime } = this;
-      const time = new Date(purchaseTime);
-      const hour = time.getUTCHours();
-      return hour > 2 && hour < 4 ? 10 : 0;
+      const { purchaseTime, purchaseDate } = this;
+      const hour = purchaseTime.split(":")[0];
+      const minute = purchaseTime.split(":")[1];
+      const time = parseInt(hour + minute);
+
+      return time > 1400 && time < 1600 ? 10 : 0;
     }
 
     async getPoints() {
