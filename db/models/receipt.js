@@ -15,7 +15,7 @@ module.exports = (sequelize, models) => {
       return trimmedRetailerName.length;
     }
 
-    _getPriceTotalPoints() {
+    _getPurchaseTotalPoints() {
       const { total } = this;
 
       const isRoundDollarAmount = total % 1 === 0;
@@ -28,13 +28,50 @@ module.exports = (sequelize, models) => {
       return points;
     }
 
+    async _getItemPoints() {
+      const items = await this.getItems();
+      let points = 0;
+
+      const pointsPerEveryTwoItems = 5 * Math.floor(items.length / 2);
+      points += pointsPerEveryTwoItems;
+
+      items.forEach((item) => {
+        const trimmedDescription = item.shortDescription.trim();
+        if (trimmedDescription.length % 3 === 0) {
+          points += Math.ceil(0.2 * item.price);
+        }
+      });
+
+      return points;
+    }
+
+    _getPurchaseDatePoints() {
+      const { purchaseDate } = this;
+      const date = new Date(purchaseDate);
+      const day = date.getDay();
+      return day % 2 !== 0 ? 6 : 0;
+    }
+
+    _getPurchaseTimePoints() {
+      const { purchaseTime } = this;
+      const time = new Date(purchaseTime);
+      const hour = time.getUTCHours();
+      return hour > 2 && hour < 4 ? 10 : 0;
+    }
+
     async getPoints() {
       const retailerNamePoints = this._getRetailerNamePoints();
-      const priceTotalPoints = this._getPriceTotalPoints();
+      const priceTotalPoints = this._getPurchaseTotalPoints();
+      const itemPoints = await this._getItemPoints();
+      const purchaseDatePoints = this._getPurchaseDatePoints();
+      const purchaseTimePoints = this._getPurchaseTimePoints();
 
       let points = 0;
       points += retailerNamePoints;
       points += priceTotalPoints;
+      points += itemPoints;
+      points += purchaseDatePoints;
+      points += purchaseTimePoints;
 
       return points;
     }
