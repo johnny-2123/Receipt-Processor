@@ -18,7 +18,6 @@ module.exports = (sequelize, models) => {
 
     _getPurchaseTotalPoints() {
       const { total } = this;
-
       const isRoundDollarAmount = total % 1 === 0;
       const isMultipleOf25Cents = total % 0.25 === 0;
 
@@ -32,7 +31,6 @@ module.exports = (sequelize, models) => {
     async _getItemPoints() {
       const items = await this.getItems();
       let points = 0;
-
       const pointsPerEveryTwoItems = 5 * Math.floor(items.length / 2);
       points += pointsPerEveryTwoItems;
 
@@ -50,6 +48,7 @@ module.exports = (sequelize, models) => {
       const { purchaseDate } = this;
       const date = new Date(purchaseDate);
       const day = date.getUTCDate();
+
       return day % 2 !== 0 ? 6 : 0;
     }
 
@@ -62,19 +61,22 @@ module.exports = (sequelize, models) => {
       return time > 1400 && time < 1600 ? 10 : 0;
     }
 
-    async getPoints() {
+    async calculateAndSetPoints() {
       const retailerNamePoints = this._getRetailerNamePoints();
-      const priceTotalPoints = this._getPurchaseTotalPoints();
+      const purchaseTotalPoints = this._getPurchaseTotalPoints();
       const itemPoints = await this._getItemPoints();
       const purchaseDatePoints = this._getPurchaseDatePoints();
       const purchaseTimePoints = this._getPurchaseTimePoints();
 
       let points = 0;
       points += retailerNamePoints;
-      points += priceTotalPoints;
+      points += purchaseTotalPoints;
       points += itemPoints;
       points += purchaseDatePoints;
       points += purchaseTimePoints;
+
+      this.points = points;
+      await this.save();
 
       return points;
     }
@@ -99,6 +101,10 @@ module.exports = (sequelize, models) => {
       total: {
         type: DataTypes.FLOAT,
       },
+      points: {
+        type: DataTypes,
+        defaultValue: 0,
+      },
     },
     {
       sequelize,
@@ -110,6 +116,7 @@ module.exports = (sequelize, models) => {
             "purchaseDate",
             "purchaseTime",
             "total",
+            "points",
             "createdAt",
             "updatedAt",
           ],
@@ -118,7 +125,15 @@ module.exports = (sequelize, models) => {
       scopes: {
         points: {
           attributes: {
-            exclude: ["createdAt", "updatedAt"],
+            exclude: [
+              "id",
+              "retailer",
+              "purchaseDate",
+              "purchaseTime",
+              "total",
+              "createdAt",
+              "updatedAt",
+            ],
           },
         },
       },

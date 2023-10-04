@@ -12,9 +12,7 @@ router.get("/:id/points", async (req, res) => {
       return res.status(404).json({ error: "Receipt not found." });
     }
 
-    const points = await receipt.getPoints();
-
-    return res.status(200).json({ points });
+    return res.status(200).json(receipt);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -35,6 +33,8 @@ router.post("/process", async (req, res) => {
       item.receiptId = newReceipt.id;
     });
     await Item.bulkCreate(items);
+
+    await newReceipt.calculateAndSetPoints();
 
     const receipt = await Receipt.findByPk(newReceipt.id);
     return res.status(201).json(receipt);
