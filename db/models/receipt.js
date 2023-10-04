@@ -1,4 +1,5 @@
 const { Model, DataTypes, UUIDV4 } = require("sequelize");
+const { Item } = require("../index.js");
 
 module.exports = (sequelize) => {
   class Receipt extends Model {
@@ -7,6 +8,19 @@ module.exports = (sequelize) => {
         foreignKey: "receiptId",
         onDelete: "CASCADE",
       });
+    }
+
+    static async getPoints() {
+      const { id } = this;
+      const items = await Item.findAll({
+        where: { receiptId: id },
+      });
+
+      const total = items.reduce((acc, item) => {
+        return acc + items.price;
+      }, 0);
+
+      return { points: total };
     }
   }
 
