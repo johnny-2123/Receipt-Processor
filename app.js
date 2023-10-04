@@ -1,5 +1,5 @@
 const express = require("express");
-const sequelize = require("./db/index.js");
+const { sequelize } = require("./db/index.js");
 const routes = require("./routes/index.js");
 
 sequelize.sync({ force: true }).then(() => {
