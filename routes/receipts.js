@@ -6,16 +6,19 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const { retailer, purchaseDate, purchaseTime, total, items } = req.body;
 
-  const itemRecords = await Item.bulkCreate(items);
-
   try {
     const newReceipt = await Receipt.scope("defaultScope").create({
       retailer,
       purchaseDate,
       purchaseTime,
       total,
-      items: itemRecords,
     });
+
+    items.forEach((item) => {
+      item.receiptId = newReceipt.id;
+    });
+
+    await Item.bulkCreate(items);
 
     const receipt = await Receipt.findByPk(newReceipt.id);
 
