@@ -1,14 +1,20 @@
-const { Model, DataTypes } = require("sequelize");
+const { Model, DataTypes, UUIDV4 } = require("sequelize");
 const sequelize = require("../index.js");
-const { v4: uuidv4 } = require("uuid");
 
-class Receipt extends Model {}
+class Receipt extends Model {
+  static associate(models) {
+    Receipt.hasMany(models.Item, {
+      foreignKey: "receiptId",
+      onDelete: "CASCADE",
+    });
+  }
+}
 
 Receipt.init(
   {
     id: {
       type: DataTypes.UUID,
-      defaultValue: () => uuidv4(),
+      defaultValue: UUIDV4(),
       primaryKey: true,
     },
     retailer: {

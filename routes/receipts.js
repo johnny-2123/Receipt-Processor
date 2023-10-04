@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
     });
 
     const receipt = await Receipt.findByPk(newReceipt.id);
-    return res.status(201).json({ receipt });
+    return res.status(201).json(receipt);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const receipts = await Receipt.findAll();
-    return res.status(200).json({ receipts });
+    return res.status(200).json(receipts);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
