@@ -26,3 +26,5 @@ Receipt.init(
     modelName: "Receipt",
   }
 );
+
+module.exports = Receipt;
