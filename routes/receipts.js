@@ -4,14 +4,16 @@ const Receipt = require("../db/models/receipt.js");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  let { retailer, purchaseDate, purchaseTime } = req.body;
+  const { retailer, purchaseDate, purchaseTime } = req.body;
 
   try {
-    const receipt = await Receipt.create({
+    const newReceipt = await Receipt.scope("defaultScope").create({
       retailer,
       purchaseDate,
       purchaseTime,
     });
+
+    const receipt = await Receipt.findByPk(newReceipt.id);
     return res.status(201).json({ receipt });
   } catch (error) {
     return res.status(500).json({ error: error.message });

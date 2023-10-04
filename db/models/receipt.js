@@ -24,6 +24,17 @@ Receipt.init(
   {
     sequelize,
     modelName: "Receipt",
+    defaultScope: {
+      attributes: {
+        exclude: [
+          "retailer",
+          "purchaseDate",
+          "purchaseTime",
+          "createdAt",
+          "updatedAt",
+        ],
+      },
+    },
   }
 );
 
