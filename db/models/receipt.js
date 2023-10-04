@@ -15,9 +15,28 @@ module.exports = (sequelize, models) => {
       return trimmedRetailerName.length;
     }
 
+    _getPriceTotalPoints() {
+      const { total } = this;
+
+      const isRoundDollarAmount = total % 1 === 0;
+      const isMultipleOf25Cents = total % 0.25 === 0;
+
+      let points = 0;
+      points += isRoundDollarAmount ? 50 : 0;
+      points += isMultipleOf25Cents ? 25 : 0;
+
+      return points;
+    }
+
     async getPoints() {
       const retailerNamePoints = this._getRetailerNamePoints();
-      return retailerNamePoints;
+      const priceTotalPoints = this._getPriceTotalPoints();
+
+      let points = 0;
+      points += retailerNamePoints;
+      points += priceTotalPoints;
+
+      return points;
     }
   }
 
