@@ -1,4 +1,9 @@
 const express = require("express");
+const sequelize = require("./db/index.js");
+
+sequelize.sync({ force: true }).then(() => {
+  console.log("Database schema synchronized.");
+});
 
 const app = express();
 
