@@ -21,7 +21,7 @@ router.get("/:id/points", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/process", async (req, res) => {
   const { retailer, purchaseDate, purchaseTime, total, items } = req.body;
 
   try {
