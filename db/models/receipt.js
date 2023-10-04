@@ -53,7 +53,7 @@ module.exports = (sequelize, models) => {
     }
 
     _getPurchaseTimePoints() {
-      const { purchaseTime, purchaseDate } = this;
+      const { purchaseTime } = this;
       const [hour, minute] = purchaseTime.split(":");
       const time = parseInt(hour + minute);
 
