@@ -19,12 +19,28 @@ module.exports = (sequelize) => {
       },
       receiptId: {
         type: DataTypes.UUID,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          notNull: true,
+        },
       },
       shortDescription: {
         type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          notNull: true,
+        },
       },
       price: {
         type: DataTypes.FLOAT,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          notNull: true,
+          isNumeric: true,
+        },
       },
     },
     {
