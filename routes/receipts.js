@@ -3,6 +3,7 @@ const { Receipt, Item } = require("../db/index.js");
 const { handleValidationErrors } = require("../utils/validation.js");
 const { check } = require("express-validator");
 
+// Validation Middleware for POST /process
 const validateReceipt = [
   check("retailer")
     .exists({ checkFalsy: true })
@@ -24,6 +25,7 @@ const validateReceipt = [
 
 const router = express.Router();
 
+// Finds a receipt by id and returns an object specifying the points awarded for the receipt
 router.get("/:id/points", async (req, res) => {
   const { id } = req.params;
 
@@ -39,6 +41,7 @@ router.get("/:id/points", async (req, res) => {
   }
 });
 
+// Creates a new receipt, calculates the points awarded for the receipt, and returns the receipt id
 router.post("/process", validateReceipt, async (req, res) => {
   const { retailer, purchaseDate, purchaseTime, total, items } = req.body;
 
@@ -50,6 +53,7 @@ router.post("/process", validateReceipt, async (req, res) => {
       total,
     });
 
+    // Set the receiptId for each item and bulk create the associated items
     items.forEach((item) => {
       item.receiptId = newReceipt.id;
     });
@@ -64,6 +68,7 @@ router.post("/process", validateReceipt, async (req, res) => {
   }
 });
 
+// Returns all receipts and their associated items - used for testing
 router.get("/", async (req, res) => {
   try {
     const receipts = await Receipt.findAll({
