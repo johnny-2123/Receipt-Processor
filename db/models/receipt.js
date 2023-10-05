@@ -90,18 +90,40 @@ module.exports = (sequelize, models) => {
       },
       retailer: {
         type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          notNull: true,
+        },
       },
       purchaseDate: {
         type: DataTypes.DATE,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          notNull: true,
+          isDate: true,
+        },
       },
       purchaseTime: {
         type: DataTypes.TIME,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          notNull: true,
+        },
       },
       total: {
         type: DataTypes.FLOAT,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          notNull: true,
+          isNumeric: true,
+        },
       },
       points: {
-        type: DataTypes,
+        type: DataTypes.INTEGER,
         defaultValue: 0,
       },
     },
