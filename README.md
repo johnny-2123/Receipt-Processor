@@ -12,6 +12,12 @@ List of languages and tools used to develop the project
 - SQLite3
 - Docker
 
+## Usage (see API documentation below for more details)
+- **POST** https://johnny-avila-receipt-processor.fly.dev/receipts/process
+  - Accepts a JSON receipt request body for processing and returns a unique receipt ID
+- **GET** https://johnny-avila-receipt-processor.fly.dev/receipts/{id}/points
+  - Accepts a receipt ID path parameter and returns the amount of points awarded to that receipt
+
 ## Rebuild the Project with Docker
 ### Prerequisites 
 * Docker -
