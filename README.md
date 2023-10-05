@@ -40,8 +40,10 @@ List of languages and tools used to develop the project
 
 ## Endpoints
 ### Endpoint: Process Receipts
+#### POST /receipts/process
 
-* Path: `/receipts/process`
+* Live Path: `https://frosty-meadow-6954.fly.dev/receipts/process`
+* Local Path: `http://localhost:3000/receipts/process`
 * Method: `POST`
 * Payload: Receipt JSON
 * Response: JSON containing an id for the receipt.
@@ -88,7 +90,9 @@ was awarded.
 ```
 
 ### Endpoint: Get Points
-
+#### GET /receipts/{id}/points
+* Live Path: `https://frosty-meadow-6954.fly.dev/receipts/{id}/points`
+* Local Path: `http://localhost:3000/receipts/{id}/points`
 * Path: `/receipts/{id}/points`
 * Method: `GET`
 * Response: A JSON object containing the number of points awarded.
